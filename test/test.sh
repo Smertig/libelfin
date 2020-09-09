@@ -5,7 +5,7 @@ die() {
     exit 1
 }
 
-(cd ../examples && make --quiet) || die "failed to build examples"
+(rm -rf _build && mkdir _build && cd _build && cmake ../.. && cmake --build .) || die "failed to build examples"
 
 dumps="sections segments lines syms tree"
 binaries=example
@@ -23,7 +23,7 @@ for dump in $dumps; do
     for binary in $binaries; do
         for compiler in $compilers; do
             if [[ $MODE == make-golden ]]; then
-                ../examples/dump-$dump golden-$compiler/$binary > golden-$compiler/$dump || \
+                ./_build/examples/dump-$dump golden-$compiler/$binary > golden-$compiler/$dump || \
                     die "failed to create golden output"
                 continue
             fi
@@ -34,7 +34,7 @@ for dump in $dumps; do
             exec 3>&1 4>&2 1>$output 2>&1
 
             # Run the test.
-            ../examples/dump-$dump golden-$compiler/$binary >& $output.out
+            ./_build/examples/dump-$dump golden-$compiler/$binary >& $output.out
             STATUS=$?
             if [[ $STATUS != 0 ]]; then
                 PASS=0

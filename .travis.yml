@@ -3,8 +3,7 @@ sudo: required
 dist: trusty
 language: cpp
 script:
-  - make
-  - make check
+  - cd test && ./test.sh
 compiler:
   - gcc
   - clang
