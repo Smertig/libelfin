@@ -4,6 +4,8 @@
 
 #include "internal.hh"
 
+#include <algorithm>
+
 using namespace std;
 
 DWARFPP_BEGIN_NAMESPACE
@@ -41,9 +43,7 @@ expr::evaluate(expr_context *ctx, const std::initializer_list<taddr> &arguments)
         // Create the initial stack.  arguments are in reverse order
         // (that is, element 0 is TOS), so reverse it.
         stack.reserve(arguments.size());
-        for (const taddr *elt = arguments.end() - 1;
-             elt >= arguments.begin(); elt--)
-                stack.push_back(*elt);
+        std::reverse_copy(arguments.begin(), arguments.end(), std::back_inserter(stack));
 
         // Create a subsection for just this expression so we can
         // easily detect the end (including premature end).
